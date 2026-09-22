@@ -35,10 +35,10 @@ export default function App() {
     const [selectedMovie, setSelectedMovie] = useState<Movie | null>(null);
 
     useEffect(() => {
-       if (movieQuery.data && movieQuery.data.movies.length === 0) {
+       if (movieQuery.isSuccess && movieQuery.data && movieQuery.data.movies.length === 0) {
          toast("No movies found for your request.")   
         }    
-    }, [movieQuery.data])
+    }, [movieQuery.data, movieQuery.isSuccess])
    
 
     const handleRequest = async (request: string): Promise<void> => {
@@ -67,7 +67,7 @@ export default function App() {
                 activeClassName={css.active}
                 nextLabel="→"
                 previousLabel="←"></ReactPaginate>}
-            {movieQuery.isLoading && <Loader />}
+            {(movieQuery.isLoading||movieQuery.isFetching) && <Loader />}
             {movieQuery.data && movieQuery.data.movies.length > 0 && <MovieGrid movies={movieQuery.data.movies} onSelect={handleSelect} />}
             {movieQuery.isError && <ErrorMessage />}
             {selectedMovie && <MovieModal movie={selectedMovie} onClose={handleClose} />}
