@@ -8,7 +8,7 @@ import ErrorMessage from "../ErrorMessage/ErrorMessage";
 import Loader from "../Loader/Loader";
 import MovieGrid from "../MovieGrid/MovieGrid";
 import MovieModal from "../MovieModal/MovieModal";
-import { useQuery } from "@tanstack/react-query";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import ReactPaginateModule from "react-paginate";
 import type { ReactPaginateProps } from "react-paginate";
 import type { ComponentType } from "react";
@@ -21,8 +21,6 @@ const ReactPaginate = (
 
 
 
-
-
 export default function App() {
 
     const [request, setRequest] = useState<string>("");
@@ -30,7 +28,8 @@ export default function App() {
     const movieQuery = useQuery({
     queryKey: ["querytext", request,page],
         queryFn: () => fetchMovies(request, page), 
-        enabled: request !== ''
+        enabled: request !== '',
+        placeholderData:keepPreviousData
     })
 
     const [selectedMovie, setSelectedMovie] = useState<Movie | null>(null);
