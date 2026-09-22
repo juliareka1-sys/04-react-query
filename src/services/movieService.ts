@@ -6,17 +6,30 @@ const SRC_URL = "https://api.themoviedb.org/3/search/movie";
 
 interface MovieHTTPResponse {
   results: Movie[];
+  total_pages: number;
 }
 
-export const fetchMovies = async (request: string): Promise<Movie[]> => {
+interface FetchMoviesResult {
+  movies: Movie[];
+  totalPages: number;
+}
+
+export const fetchMovies = async (
+  request: string,
+  page: number,
+): Promise<FetchMoviesResult> => {
   const queryParams = {
     params: {
       query: request,
+      page,
     },
     headers: {
       Authorization: `Bearer ${myKey}`,
     },
   };
   const response = await axios.get<MovieHTTPResponse>(SRC_URL, queryParams);
-  return response.data.results;
+  return {
+    movies: response.data.results,
+    totalPages: response.data.total_pages,
+  };
 };
